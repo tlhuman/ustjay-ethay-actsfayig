@@ -1,8 +1,9 @@
 import os
 
 import requests
-from flask import Flask, send_file, Response
+from flask import Flask, send_file, Response, render_template
 from bs4 import BeautifulSoup
+import hashlib
 
 app = Flask(__name__)
 
@@ -16,10 +17,15 @@ def get_fact():
 
     return facts[0].getText()
 
+def get_pig_latin():
+    url = "http://hidden-journey-62459.herokuapp.com/esultray/{}/"
+    hashstr = hashlib.md5(get_fact().encode('utf8')).hexdigest()
+    return url.format(hashstr)
+
 
 @app.route('/')
 def home():
-    return "FILL ME!"
+    return render_template('base.jinja2', pig_latin=get_pig_latin())
 
 
 if __name__ == "__main__":
